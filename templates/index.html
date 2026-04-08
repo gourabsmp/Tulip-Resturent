@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tulip | Premium Dining Bankura</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        /* LUXURY COLOR PALETTE */
+        :root {
+            --bg-dark: #0a0a0a;
+            --glass-bg: rgba(20, 20, 20, 0.6);
+            --gold: #d4af37;
+            --text-light: #fdfdfd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(15px);
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            color: var(--gold);
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a.menu-link {
+            color: #ddd;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .nav-links a.menu-link:hover {
+            color: var(--gold);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            background: transparent;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-outline:hover {
+            background: var(--gold);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-solid {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 15px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 6px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-solid:hover {
+            background: #e8c454;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25);
+        }
+
+        .qty-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid var(--gold);
+            border-radius: 30px;
+            overflow: hidden;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .qty-btn {
+            background: transparent;
+            color: var(--gold);
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .qty-btn:hover {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .qty-val {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* FORM INPUTS FOR BOOKING */
+        .form-control {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #fff;
+            padding: 14px 15px;
+            border-radius: 6px;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.6;
+            cursor: pointer;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            z-index: -2;
+            object-fit: cover;
+            filter: brightness(0.3) contrast(1.2);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent, var(--bg-dark));
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: clamp(4rem, 12vw, 8rem);
+            color: var(--gold);
+            margin-bottom: 10px;
+            animation: fadeUp 1.2s ease-out;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            animation: fadeUp 1.8s ease-out;
+            color: #ccc;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            margin-bottom: 4rem;
+            color: var(--gold);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: var(--gold);
+            margin: 15px auto 0;
+        }
+
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .reveal-item.show-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-header {
+            grid-column: 1 / -1;
+            font-size: 2.2rem;
+            color: #fff;
+            margin: 4rem 0 1.5rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .menu-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .img-container {
+            overflow: hidden;
+            height: 240px;
+        }
+
+        .menu-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .menu-card:hover .menu-img {
+            transform: scale(1.05);
+        }
+
+        .menu-info {
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .menu-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-info p {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 15px;
+        }
+
+        .price {
+            color: var(--gold);
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .cart-panel {
+            background: rgba(15, 15, 15, 0.98);
+            padding: 3rem;
+            border-radius: 12px;
+            margin-top: 5rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+            font-size: 1.1rem;
+            color: #ccc;
+        }
+
+        footer {
+            background: #050505;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-top: 1px solid #111;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 2;
+            color: #777;
+        }
+
+        .footer-content h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        /* Responsive grids */
+        .booking-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .booking-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar" id="navbar">
+        <a href="#" class="logo">Tulip</a>
+        <ul class="nav-links">
+            <li><a href="#offers" class="menu-link">Offers</a></li>
+            <li><a href="#services" class="menu-link">Services</a></li>
+            <li><a href="#menu" class="menu-link">Menu</a></li>
+            {% if session.get('user_name') %}
+            <li><a href="/logout" class="btn-outline">Hi, {{ session.get('user_name') }}</a></li>
+            {% else %}
+            <li><a href="/login" class="btn-outline">Login / Sign Up</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <header id="home" class="hero">
+        <video autoplay loop muted playsinline class="hero-video"
+            poster="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1600&q=80">
+            <source src="{{ url_for('static', filename='videos/bg-video.mp4') }}" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Tulip</h1>
+            <p>A Cinematic Dining Experience</p>
+        </div>
+    </header>
+
+    <section id="offers" class="container">
+        <h2 class="section-title reveal-item">Exclusive Offers</h2>
+        <div class="menu-grid">
+            <div class="menu-card reveal-item"
+                style="padding: 2.5rem; text-align: center; background: linear-gradient(145deg, rgba(30,30,30,0.8), rgba(15,15,15,0.9));">
+                <h3 style="font-size: 2.2rem; color: var(--gold); margin-bottom: 15px;">Happy Hour</h3>
+                <p style="color: #ccc; margin-bottom: 25px; line-height: 1.8;">Enjoy a massive 20% OFF on all Starters
+                    and Mocktails every day between 4 PM and 7 PM.</p>
+                <div class="btn-outline" style="border-style: dashed; pointer-events: none;">Code: HAPPY20</div>
+            </div>
+            <div class="menu-card reveal-item"
+                style="padding: 2.5rem; text-align: center; background: linear-gradient(145deg, rgba(30,30,30,0.8), rgba(15,15,15,0.9));">
+                <h3 style="font-size: 2.2rem; color: var(--gold); margin-bottom: 15px;">Weekend Feast</h3>
+                <p style="color: #ccc; margin-bottom: 25px; line-height: 1.8;">Order above ₹1,500 on weekends and
+                    receive a complimentary Sizzling Brownie dessert.</p>
+                <div class="btn-outline" style="border-style: dashed; pointer-events: none;">Auto-Applied</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="container"
+        style="background: rgba(255,255,255,0.02); border-radius: 20px; padding: 4rem;">
+        <h2 class="section-title reveal-item">Services & Reservations</h2>
+        <div class="booking-grid">
+            <div class="reveal-item">
+                <h3 style="font-size: 2.2rem; color: #fff; margin-bottom: 25px;">Reserve Your Experience</h3>
+                <p style="color: #aaa; margin-bottom: 30px; line-height: 1.8; font-size: 1.1rem;">Whether it's a
+                    romantic dinner, a family gathering, or a corporate event, Tulip offers the perfect ambiance.
+                    Pre-book your table to ensure a seamless and luxurious dining experience in Bankura.</p>
+                <ul style="list-style: none; color: #ddd; line-height: 2.2; font-size: 1.1rem;">
+                    <li>✨ Private Dining Rooms Available</li>
+                    <li>✨ Customized Event Menus</li>
+                    <li>✨ Candlelight Arrangements</li>
+                    <li>✨ Fast-Track Order Service</li>
+                </ul>
+            </div>
+
+            <div class="menu-card reveal-item" style="padding: 3rem; box-shadow: 0 10px 40px rgba(0,0,0,0.8);">
+                <h3 style="color: var(--gold); margin-bottom: 25px; font-size: 1.8rem; text-align: center;">Book a Table
+                </h3>
+
+                <form id="booking-form" onsubmit="submitBooking(event)">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <input type="text" id="b_name" class="form-control" placeholder="Full Name" required>
+                        <input type="tel" id="b_phone" class="form-control" placeholder="Phone Number" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <input type="date" id="b_date" class="form-control" required>
+                        <input type="time" id="b_time" class="form-control" required>
+                        <input type="number" id="b_guests" class="form-control" placeholder="Guests" min="1" max="20"
+                            required>
+                    </div>
+                    <textarea id="b_requests" class="form-control"
+                        placeholder="Any special requests? (e.g. Anniversary, Window Seat)" rows="3"
+                        style="margin-bottom: 25px;"></textarea>
+
+                    <button type="submit" class="btn-solid" id="booking-btn">Confirm Reservation</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="container">
+        <h2 class="section-title reveal-item">The Grand Menu</h2>
+        <div id="menu-grid" class="menu-grid"></div>
+
+        <div class="cart-panel reveal-item" id="cart-panel" style="display: none;">
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--gold);">Your Selection</h3>
+            <div id="cart-items"></div>
+            <h3 style="text-align: right; margin-top: 30px; color: var(--gold); font-size: 1.8rem;">Total: ₹<span
+                    id="cart-total">0</span></h3>
+
+            <button class="btn-solid" style="margin-top: 30px;" onclick="initiateCheckout()">Pay Securely &
+                Order</button>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <h3>Tulip</h3>
+            <p>📍 285, Netajinagar, Katjuridanga, Bankura, West Bengal 722102</p>
+            <p>📞 +91 81456 43818</p>
+            <p style="margin-top: 20px; color: var(--gold); font-size: 1.2rem;">⭐ 4.2 / 5 Google Reviews (2,703+)</p>
+            <p style="margin-top: 40px; font-size: 0.8rem; opacity: 0.3;">&copy; 2026 Tulip Restaurant. Handcrafted with
+                precision.</p>
+        </div>
+    </footer>
+
+    <script>
+        // SCROLL OBSERVER
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => { entry.target.classList.add('show-item'); }, index * 80);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+        // TABLE BOOKING LOGIC
+        function submitBooking(e) {
+            e.preventDefault();
+            const btn = document.getElementById('booking-btn');
+            btn.innerText = "Processing...";
+
+            const data = {
+                name: document.getElementById('b_name').value,
+                phone: document.getElementById('b_phone').value,
+                date: document.getElementById('b_date').value,
+                time: document.getElementById('b_time').value,
+                guests: document.getElementById('b_guests').value,
+                requests: document.getElementById('b_requests').value
+            };
+
+            fetch('/api/book_table', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        alert(res.message);
+                        document.getElementById('booking-form').reset();
+                    } else {
+                        alert("Error booking table. Please try again.");
+                    }
+                    btn.innerText = "Confirm Reservation";
+                });
+        }
+
+        // MENU FETCH & CART LOGIC
+        let cart = [], total = 0;
+
+        fetch('/api/menu').then(r => r.json()).then(data => {
+            const grid = document.getElementById('menu-grid');
+            const categoryOrder = ["Soups & Appetizers", "Tandoor Starters", "Indian Mains", "Chinese", "Breads & Sides", "Desserts & Beverages"];
+
+            categoryOrder.forEach(category => {
+                const items = data.filter(item => item.category === category);
+                if (items.length > 0) {
+                    grid.innerHTML += `<h3 class="category-header reveal-item">${category}</h3>`;
+                    items.forEach(item => {
+                        grid.innerHTML += `
+                            <div class="menu-card reveal-item">
+                                <div class="img-container">
+                                    <img src="${item.image}" class="menu-img" alt="${item.name}">
+                                </div>
+                                <div class="menu-info">
+                                    <h3>${item.name}</h3>
+                                    <p>${item.description}</p>
+                                    <div class="price">₹${item.price}</div>
+                                    <div id="action-${item.id}" style="width: 100%;">
+                                        <button class="btn-outline" style="width: 100%;" onclick="changeQty(${item.id}, '${item.name.replace(/'/g, "\\'")}', ${item.price}, 1)">Add to Order</button>
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                }
+            });
+            document.querySelectorAll('.reveal-item').forEach((el) => observer.observe(el));
+        });
+
+        function changeQty(id, name, price, delta) {
+            let existing = cart.find(i => i.id === id);
+            if (existing) {
+                existing.quantity += delta;
+                if (existing.quantity <= 0) cart = cart.filter(i => i.id !== id);
+            } else if (delta > 0) {
+                cart.push({ id: id, name: name, price: price, quantity: 1 });
+            }
+
+            total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            updateCardButtonUI(id, name, price);
+            updateCartPanelUI();
+        }
+
+        function updateCardButtonUI(id, name, price) {
+            let existing = cart.find(i => i.id === id);
+            let container = document.getElementById(`action-${id}`);
+            if (!container) return;
+
+            if (existing && existing.quantity > 0) {
+                container.innerHTML = `
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="changeQty(${id}, '${name.replace(/'/g, "\\'")}', ${price}, -1)">−</button>
+                        <span class="qty-val">${existing.quantity}</span>
+                        <button class="qty-btn" onclick="changeQty(${id}, '${name.replace(/'/g, "\\'")}', ${price}, 1)">+</button>
+                    </div>`;
+            } else {
+                container.innerHTML = `<button class="btn-outline" style="width: 100%;" onclick="changeQty(${id}, '${name.replace(/'/g, "\\'")}', ${price}, 1)">Add to Order</button>`;
+            }
+        }
+
+        function updateCartPanelUI() {
+            const cartPanel = document.getElementById('cart-panel');
+            if (cart.length === 0) {
+                cartPanel.style.display = 'none'; return;
+            }
+
+            cartPanel.style.display = 'block';
+            setTimeout(() => { cartPanel.classList.add('show-item'); }, 50);
+
+            document.getElementById('cart-items').innerHTML = cart.map(i => `<div class="cart-item"><span>${i.name} <b style="color:#fff;">(x${i.quantity})</b></span><span style="color:var(--gold); font-weight:bold;">₹${i.price * i.quantity}</span></div>`).join('');
+            document.getElementById('cart-total').innerText = (total + (total * 0.05)).toFixed(2);
+        }
+
+        function initiateCheckout() {
+            fetch('/api/create_order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cart: cart }) })
+                .then(res => res.json()).then(data => {
+                    if (data.error) return alert("Payment Gateway Config Error.");
+                    var options = {
+                        "key": "YOUR_RAZORPAY_KEY_ID",
+                        "amount": data.amount, "currency": "INR", "name": "Tulip Premium Dining",
+                        "order_id": data.razorpay_order_id,
+                        "handler": function (response) {
+                            fetch('/api/payment_success', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ razorpay_order_id: response.razorpay_order_id }) })
+                                .then(() => { alert("Payment Successful! Your order is placed."); location.reload(); });
+                        },
+                        "theme": { "color": "#d4af37" }
+                    };
+                    new Razorpay(options).open();
+                });
+        }
+    </script>
+</body>
+
+</html>
